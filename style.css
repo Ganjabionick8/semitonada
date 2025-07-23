@@ -1,0 +1,213 @@
+:root {
+  --cor-fundo: #121212;
+  --cor-texto: #eee;
+  --cor-primaria: #0ff;
+  --cor-secundaria: #088;
+  --cor-alerta: #0f0;
+  --espacamento: 1rem;
+  --fonte: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background-color: var(--cor-fundo);
+  color: var(--cor-texto);
+  font-family: var(--fonte);
+  padding: var(--espacamento);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.container {
+  max-width: 800px;
+  margin: auto;
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+}
+
+.controles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--espacamento);
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.tom-btns {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.tom-btns label {
+  font-weight: 600;
+}
+
+.tom-btns button,
+.modo-toggle button {
+  background: var(--cor-secundaria);
+  border: none;
+  color: var(--cor-texto);
+  padding: 0.5rem 1rem;
+  margin: 0 0.25rem;
+  cursor: pointer;
+  border-radius: 4px;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+  user-select: none;
+  min-width: 38px;
+  text-align: center;
+}
+
+.tom-btns button.ativo,
+.modo-toggle button.ativo,
+.tom-btns button:hover,
+.modo-toggle button:hover {
+  background: var(--cor-primaria);
+}
+
+.graus {
+  display: flex;
+  justify-content: space-around;
+  font-weight: bold;
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+  user-select: none;
+}
+
+.graus div {
+  flex: 1;
+  text-align: center;
+}
+
+.acordes {
+  display: flex;
+  justify-content: space-around;
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  user-select: none;
+}
+
+.acordes div {
+  flex: 1;
+  text-align: center;
+  cursor: pointer;
+  border-radius: 6px;
+  padding: 0.4rem;
+  transition: background-color 0.3s ease;
+  user-select: none;
+}
+
+.acordes div[data-fechado="true"] {
+  background-color: var(--cor-secundaria);
+  color: #444;
+  cursor: pointer;
+}
+
+.acordes div:hover:not([data-fechado="true"]) {
+  background-color: var(--cor-primaria);
+  color: var(--cor-fundo);
+}
+
+.meta {
+  text-align: center;
+  font-style: italic;
+  margin-bottom: 1rem;
+  min-height: 1.5rem;
+}
+
+.teoria {
+  background-color: #222;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-top: 1rem;
+  color: var(--cor-texto);
+  line-height: 1.5;
+}
+
+.tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.tabs button {
+  flex: 1;
+  background: var(--cor-secundaria);
+  border: none;
+  padding: 0.5rem;
+  cursor: pointer;
+  border-radius: 4px;
+  color: var(--cor-texto);
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+  user-select: none;
+}
+
+.tabs button.ativo,
+.tabs button:hover {
+  background: var(--cor-primaria);
+}
+
+.aba {
+  display: none;
+  color: var(--cor-texto);
+}
+
+.aba[style*="display: block"] {
+  display: block;
+}
+
+#btnPix {
+  background: var(--cor-primaria);
+  color: var(--cor-fundo);
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+  user-select: none;
+  transition: background-color 0.3s ease;
+}
+
+#btnPix:hover {
+  background: var(--cor-secundaria);
+}
+
+#confirmacaoPix {
+  font-weight: 700;
+  text-align: center;
+}
+
+@media (max-width: 600px) {
+  .controles {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .tom-btns button,
+  .modo-toggle button {
+    margin: 0.25rem 0;
+  }
+
+  .graus,
+  .acordes {
+    flex-direction: column;
+  }
+
+  .graus div,
+  .acordes div {
+    margin-bottom: 0.5rem;
+  }
+}

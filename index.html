@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SemitONada</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="container">
+    <h1>SemitONada</h1>
+
+    <section class="controles" aria-label="Controles do Campo Harmônico">
+      <div class="tom-btns" role="group" aria-label="Seleção de tom">
+        <label for="tons">Tom:</label>
+        <div id="tons" tabindex="0" aria-live="polite" aria-relevant="additions"></div>
+      </div>
+
+      <div class="modo-toggle" role="group" aria-label="Modos de exibição">
+        <button id="toggleModo" aria-pressed="false" type="button">Modo: Maior</button>
+        <button id="btnGeral" type="button">Modo Geral</button>
+        <button id="btnIndividual" type="button">Modo Individual</button>
+        <button id="btnResetIndividual" type="button" style="display:none;">Resetar Individual</button>
+      </div>
+    </section>
+
+    <section class="graus" aria-label="Graus do campo harmônico" role="list">
+      <div role="listitem">I</div><div role="listitem">II</div><div role="listitem">III</div>
+      <div role="listitem">IV</div><div role="listitem">V</div><div role="listitem">VI</div><div role="listitem">VII°</div>
+    </section>
+
+    <section id="acordes" class="acordes" aria-live="polite" aria-label="Acordes do campo harmônico"></section>
+    <section id="meta" class="meta" aria-live="polite" aria-atomic="true"></section>
+
+    <section id="teoria-container" aria-label="Seção de teoria musical">
+      <button id="btnToggleTeoria" aria-expanded="false" aria-controls="teoria" type="button">📘 Ver Teoria</button>
+
+      <div id="teoria" class="teoria" style="display: none;">
+        <nav class="tabs" role="tablist" aria-label="Abas de teoria">
+          <button id="tab-geral" role="tab" aria-selected="true" tabindex="0" type="button">🎵 Geral</button>
+          <button id="tab-progressao" role="tab" aria-selected="false" tabindex="-1" type="button">🎼 Progressões</button>
+          <button id="tab-dicionario" role="tab" aria-selected="false" tabindex="-1" type="button">📖 Dicionário</button>
+          <button id="tab-intervalos" role="tab" aria-selected="false" tabindex="-1" type="button">🎶 Intervalos</button>
+          <button id="tab-apoio" role="tab" aria-selected="false" tabindex="-1" type="button">❤️ Apoie</button>
+        </nav>
+
+        <article id="aba-geral" class="aba" role="tabpanel" tabindex="0">
+          <h2>Teoria Geral</h2>
+          <p>O <strong>campo harmônico</strong> é o conjunto de acordes formados a partir das notas de uma escala.</p>
+          <p><strong>Aplicação prática:</strong> ajuda a entender quais acordes combinam dentro de um tom e a criar progressões harmônicas.</p>
+          <h3>Campo Maior:</h3>
+          <ul>
+            <li><strong>I</strong> — maior (tônica)</li>
+            <li><strong>ii</strong> — menor (subdominante)</li>
+            <li><strong>iii</strong> — menor (menor mediano)</li>
+            <li><strong>IV</strong> — maior (subdominante)</li>
+            <li><strong>V</strong> — maior (dominante)</li>
+            <li><strong>vi</strong> — menor (relativo menor)</li>
+            <li><strong>vii°</strong> — diminuto (tensão que resolve)</li>
+          </ul>
+          <h3>Campo Menor:</h3>
+          <ul>
+            <li><strong>i</strong> — menor (tônica)</li>
+            <li><strong>ii°</strong> — diminuto (tensão)</li>
+            <li><strong>III</strong> — maior (mediant)</li>
+            <li><strong>iv</strong> — menor (subdominante)</li>
+            <li><strong>v</strong> — menor (dominante)</li>
+            <li><strong>VI</strong> — maior (submediante)</li>
+            <li><strong>VII</strong> — maior (sensível)</li>
+          </ul>
+          <p>Dica: pratique reconhecendo esses graus no seu instrumento para internalizar o som e a função de cada acorde.</p>
+        </article>
+
+        <article id="aba-progressao" class="aba" role="tabpanel" tabindex="0" style="display: none;">
+          <h2>Exemplos de Progressão</h2>
+          <p><strong>1. Pop Clássico:</strong> I - V - vi - IV<br><em>Ex: C - G - Am - F</em></p>
+          <p><strong>2. Rock Simples:</strong> I - IV - V<br><em>Ex: C - F - G</em></p>
+          <p><strong>3. Jazz / MPB:</strong> ii - V - I<br><em>Ex: Dm - G - C</em></p>
+          <p><strong>4. Emoção crescente:</strong> vi - IV - I - V<br><em>Ex: Am - F - C - G</em></p>
+          <p>Experimente essas combinações nos tons que quiser!</p>
+        </article>
+
+        <article id="aba-dicionario" class="aba" role="tabpanel" tabindex="0" style="display: none;">
+          <h2>Dicionário de Graus</h2>
+          <ul>
+            <li><strong>I</strong>: Tônica (estabilidade total)</li>
+            <li><strong>ii</strong>: Subdominante menor (prepara)</li>
+            <li><strong>iii</strong>: Menor mediano (transições)</li>
+            <li><strong>IV</strong>: Subdominante maior (abre)</li>
+            <li><strong>V</strong>: Dominante (tensão, resolve pro I)</li>
+            <li><strong>vi</strong>: Relativo menor do I</li>
+            <li><strong>vii°</strong>: Diminuto, instável (pede resolução)</li>
+          </ul>
+        </article>
+
+        <article id="aba-intervalos" class="aba" role="tabpanel" tabindex="0" style="display:none;">
+          <h2>Intervalos Musicais</h2>
+          <p>Intervalos são a distância entre duas notas. Eles formam a base para a construção de escalas e acordes.</p>
+          <ul>
+            <li><strong>Uníssono</strong>: mesma nota (0 semitons)</li>
+            <li><strong>Segunda menor</strong>: 1 semitom</li>
+            <li><strong>Segunda maior</strong>: 2 semitons</li>
+            <li><strong>Terça menor</strong>: 3 semitons</li>
+            <li><strong>Terça maior</strong>: 4 semitons</li>
+            <li><strong>Quarta justa</strong>: 5 semitons</li>
+            <li><strong>Quinta justa</strong>: 7 semitons</li>
+            <li><strong>Sexta maior</strong>: 9 semitons</li>
+            <li><strong>Sétima maior</strong>: 11 semitons</li>
+            <li><strong>Oitava</strong>: 12 semitons (uma oitava acima)</li>
+          </ul>
+          <p>Entender intervalos é fundamental para montar acordes e progressões harmônicas.</p>
+        </article>
+
+        <article id="aba-apoio" class="aba" role="tabpanel" tabindex="0" style="display: none;">
+          <h2>❤️ Apoie este Projeto</h2>
+          <p>Se o <strong>SemitONada</strong> te ajuda, considere apoiar com qualquer valor via Pix.</p>
+          <p>Por enquanto, o Pix está no meu nome pessoal, mas toda ajuda vai direto para manter e melhorar o app!</p>
+          <p>Obrigado pelo seu apoio e por compartilhar com outros músicos! 🎶</p>
+          <button id="btnPix" data-pix="sua-chave-pix-aqui" type="button">🔗 Copiar chave Pix</button>
+          <p id="confirmacaoPix" style="color:#0f0; margin-top:0.5rem; display:none;">Chave Pix copiada para a área de transferência!</p>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
