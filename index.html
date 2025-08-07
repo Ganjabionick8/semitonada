@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>SemitONada</title>
   <link rel="stylesheet" href="style.css" />
+  <style>
+    /* Insira aqui o CSS que eu te mandei antes, ou mantenha no arquivo externo */
+  </style>
 </head>
 <body>
   <main class="container">
@@ -21,10 +24,13 @@
         <button id="btnGeral" type="button">Modo Geral</button>
         <button id="btnIndividual" type="button">Modo Individual</button>
         <button id="btnResetIndividual" type="button" style="display:none;">Resetar Individual</button>
-        <!-- Novos botões -->
-        <button id="btnToggleNotas" type="button" aria-pressed="false" title="Mostrar notas com sustenidos/bemóis">♯♭ Dupla Nomenclatura</button>
-        <button id="btnAnimacao" type="button" aria-pressed="false" title="Ativar progressão automática com animação">▶️ Animação</button>
-        <button id="btnQuiz" type="button" aria-pressed="false" title="Entrar no modo treino (quiz)">❓ Quiz</button>
+        <button id="btnAutoProg" type="button">▶️ Auto Progressão</button>
+        <button id="btnTreino" type="button">🧠 Modo Treino</button>
+      </div>
+
+      <div class="nome-dupla" role="group" aria-label="Nomenclatura">
+        <label for="toggleNomenclatura">Nomenclatura:</label>
+        <button id="toggleNomenclatura" type="button" aria-pressed="false">Mostrar Bemóis</button>
       </div>
     </section>
 
@@ -125,17 +131,326 @@
         </article>
       </div>
     </section>
-
-    <!-- Container do Quiz -->
-    <section id="quiz-container" style="display:none; margin-top:1rem;" aria-label="Modo Treino - Quiz musical">
-      <p id="quiz-pergunta" style="font-weight:600; font-size:1.2rem;">Pergunta vai aparecer aqui</p>
-      <div id="quiz-respostas" role="group" aria-label="Respostas do quiz"></div>
-      <p id="quiz-feedback" style="font-weight:700; margin-top:0.5rem;"></p>
-      <button id="btnProximaPergunta" type="button" style="display:none; margin-top:0.75rem;">Próxima</button>
-      <button id="btnSairQuiz" type="button" style="margin-top:0.75rem;">Sair do Quiz</button>
-    </section>
   </main>
 
-  <script src="script.js"></script>
+<script>
+const notasSharp = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+const notasFlat  = ['C', 'Db', 'D', 'Eb', 'E', 'F', 'Gb', 'G', 'Ab', 'A', 'Bb', 'B'];
+
+const campos = {
+  maior: {
+    intervalos: [0, 2, 4, 5, 7, 9, 11],
+    sufixos: ["", "m", "m", "", "", "m", "°"]
+  },
+  menor: {
+    intervalos: [0, 2, 3, 5, 7, 8, 10],
+    sufixos: ["m", "°", "", "m", "m", "", ""]
+  }
+};
+
+let modoAtual = 'maior';
+let tomAtual = 'C';
+let acordeAtual = 0;
+let mostrarBemol = false;
+let autoProgInterval = null;
+let modoTreino = false;
+
+const tonsDiv = document.getElementById("tons");
+const acordesDiv = document.getElementById("acordes");
+const metaDiv = document.getElementById("meta");
+const toggleBtn = document.getElementById("toggleModo");
+const btnGeral = document.getElementById("btnGeral");
+const btnIndividual = document.getElementById("btnIndividual");
+const btnResetIndividual = document.getElementById("btnResetIndividual");
+const btnToggleTeoria = document.getElementById("btnToggleTeoria");
+const teoriaDiv = document.getElementById("teoria");
+const tabs = document.querySelectorAll('.tabs button');
+const btnPix = document.getElementById("btnPix");
+const btnAutoProg = document.getElementById("btnAutoProg");
+const btnTreino = document.getElementById("btnTreino");
+const toggleNomenclatura = document.getElementById("toggleNomenclatura");
+
+function setModoTexto() {
+  toggleBtn.textContent = `Modo: ${modoAtual === 'maior' ? 'Maior' : 'Menor'}`;
+  toggleBtn.setAttribute('aria-pressed', modoAtual === 'menor');
+}
+
+function ativarBotaoTom(nota) {
+  document.querySelectorAll('#tons button').forEach(b => b.classList.remove('ativo'));
+  const btn = [...tonsDiv.children].find(b => b.textContent === nota || b.textContent === converterNota(nota));
+  if (btn) btn.classList.add('ativo');
+}
+
+function limpar() {
+  acordesDiv.innerHTML = '';
+  metaDiv.textContent = '';
+  btnResetIndividual.style.display = 'none';
+  pararAutoProg();
+  modoTreino = false;
+  btnTreino.textContent = "🧠 Modo Treino";
+}
+
+function converterNota(nota) {
+  if (!mostrarBemol) return nota;
+  const i = notasSharp.indexOf(nota);
+  return i >= 0 ? notasFlat[i] : nota;
+}
+
+function gerarCampo(tom, modo) {
+  const baseNotas = mostrarBemol ? notasFlat : notasSharp;
+  const idx = baseNotas.indexOf(tom);
+  const { intervalos, sufixos } = campos[modo];
+  return intervalos.map((intv, i) => {
+    const nota = baseNotas[(idx + intv) % 12];
+    return nota + sufixos[i];
+  });
+}
+
+function mostrarTodos() {
+  modoTreino = false;
+  limpar();
+  const campo = gerarCampo(tomAtual, modoAtual);
+  acordesDiv.innerHTML = '';
+  campo.forEach(ac => {
+    const div = document.createElement("div");
+    div.textContent = ac;
+    acordesDiv.appendChild(div);
+  });
+  metaDiv.textContent = `Campo harmônico de ${converterNota(tomAtual)} (${modoAtual})`;
+}
+
+function modoIndividual() {
+  modoTreino = false;
+  limpar();
+  const campo = gerarCampo(tomAtual, modoAtual);
+  acordesDiv.innerHTML = '';
+  for (let i = 0; i < 7; i++) {
+    const div = document.createElement("div");
+    div.textContent = i === 0 ? campo[0] : "●";
+    if (i !== 0) div.setAttribute("data-fechado", "true");
+    div.tabIndex = 0;
+    div.setAttribute('role', 'button');
+    div.setAttribute('aria-pressed', div.textContent !== "●");
+    div.onclick = () => {
+      if (div.textContent === "●") {
+        div.textContent = campo[i];
+        div.removeAttribute("data-fechado");
+        div.setAttribute('aria-pressed', "true");
+        atualizarMeta();
+      }
+    };
+    acordesDiv.appendChild(div);
+  }
+  acordeAtual = 1;
+  atualizarMeta();
+  btnResetIndividual.style.display = 'inline-block';
+}
+
+function resetarIndividual() {
+  modoIndividual();
+}
+
+function atualizarMeta() {
+  const mostrados = [...acordesDiv.children].filter(d => d.textContent !== "●").length;
+  metaDiv.textContent = modoTreino
+    ? `Modo Treino: ${mostrados}/7 acertados`
+    : `Progresso: ${mostrados}/7`;
+}
+
+function alternarModo() {
+  modoAtual = modoAtual === 'maior' ? 'menor' : 'maior';
+  setModoTexto();
+  limpar();
+}
+
+function toggleTeoria() {
+  const isHidden = teoriaDiv.style.display === "none" || teoriaDiv.style.display === "";
+  teoriaDiv.style.display = isHidden ? "block" : "none";
+  btnToggleTeoria.setAttribute('aria-expanded', isHidden);
+}
+
+function mostrarAba(nome) {
+  const abas = document.querySelectorAll('.aba');
+  abas.forEach(aba => aba.style.display = 'none');
+  document.getElementById(`aba-${nome}`).style.display = 'block';
+
+  tabs.forEach(btn => {
+    btn.classList.remove('ativo');
+    btn.setAttribute('aria-selected', 'false');
+    btn.tabIndex = -1;
+  });
+  const btn = document.getElementById(`tab-${nome}`);
+  btn.classList.add('ativo');
+  btn.setAttribute('aria-selected', 'true');
+  btn.tabIndex = 0;
+  btn.focus();
+}
+
+function copiarPix() {
+  const chave = btnPix.getAttribute("data-pix");
+  navigator.clipboard.writeText(chave).then(() => {
+    const c = document.getElementById("confirmacaoPix");
+    c.style.display = 'block';
+    setTimeout(() => {
+      c.style.display = 'none';
+    }, 3000);
+  });
+}
+
+// === Auto Progressão ===
+
+function autoProgressao() {
+  if (autoProgInterval) return; // já rodando
+  limpar();
+  const campo = gerarCampo(tomAtual, modoAtual);
+  let idx = 0;
+  acordesDiv.innerHTML = '';
+  for(let i=0; i<7; i++) {
+    const div = document.createElement("div");
+    div.textContent = "●";
+    div.setAttribute("data-fechado", "true");
+    div.tabIndex = 0;
+    acordesDiv.appendChild(div);
+  }
+  metaDiv.textContent = `Progressão automática de ${converterNota(tomAtual)} (${modoAtual})`;
+  autoProgInterval = setInterval(() => {
+    if(idx >= 7) {
+      pararAutoProg();
+      return;
+    }
+    const div = acordesDiv.children[idx];
+    div.textContent = campo[idx];
+    div.removeAttribute("data-fechado");
+    idx++;
+  }, 1200);
+}
+
+function pararAutoProg() {
+  if(autoProgInterval) {
+    clearInterval(autoProgInterval);
+    autoProgInterval = null;
+  }
+}
+
+// === Modo Treino ===
+
+function iniciarTreino() {
+  modoTreino = true;
+  limpar();
+  btnTreino.textContent = "❌ Sair do Treino";
+  metaDiv.textContent = `Modo Treino: clique no acorde correto`;
+  const campo = gerarCampo(tomAtual, modoAtual);
+  const graus = ["I","II","III","IV","V","VI","VII"];
+  
+  acordesDiv.innerHTML = '';
+  
+  // Escolhe grau alvo aleatório
+  let alvo = Math.floor(Math.random()*7);
+  
+  // Função para criar botões e checar respostas
+  function criarBotao(i) {
+    const div = document.createElement("div");
+    div.textContent = campo[i];
+    div.tabIndex = 0;
+    div.setAttribute('role','button');
+    div.style.cursor = 'pointer';
+    div.onclick = () => {
+      if(!modoTreino) return;
+      if(i === alvo) {
+        metaDiv.textContent = `Acertou! Grau ${graus[alvo]}: ${campo[alvo]}`;
+        iniciarTreino(); // reinicia com novo alvo
+      } else {
+        metaDiv.textContent = `Errado! Tente novamente.`;
+      }
+    };
+    return div;
+  }
+
+  for(let i=0; i<7; i++) {
+    acordesDiv.appendChild(criarBotao(i));
+  }
+
+  // Mostra desafio
+  metaDiv.textContent = `Modo Treino: clique no acorde do grau ${graus[alvo]}`;
+}
+
+// === Eventos ===
+
+document.addEventListener('DOMContentLoaded', () => {
+  // Popula tons com dupla nomenclatura
+  notasSharp.forEach((nota, i) => {
+    const nomeExibir = mostrarBemol ? notasFlat[i] : nota;
+    const btn = document.createElement("button");
+    btn.textContent = nomeExibir;
+    btn.type = 'button';
+    btn.addEventListener('click', () => {
+      tomAtual = nota; // mantemos sempre a nota sharp interna para gerar acordes
+      acordeAtual = 0;
+      ativarBotaoTom(nomeExibir);
+      limpar();
+    });
+    tonsDiv.appendChild(btn);
+  });
+
+  ativarBotaoTom(converterNota(tomAtual));
+  setModoTexto();
+  mostrarAba('geral');
+
+  toggleBtn.addEventListener('click', () => {
+    alternarModo();
+    mostrarTodos();
+  });
+  btnGeral.addEventListener('click', mostrarTodos);
+  btnIndividual.addEventListener('click', modoIndividual);
+  btnResetIndividual.addEventListener('click', resetarIndividual);
+  btnToggleTeoria.addEventListener('click', toggleTeoria);
+  tabs.forEach(tab => tab.addEventListener('click', () => mostrarAba(tab.id.replace('tab-', ''))));
+  btnPix.addEventListener('click', copiarPix);
+
+  btnAutoProg.addEventListener('click', () => {
+    if(autoProgInterval) {
+      pararAutoProg();
+      mostrarTodos();
+    } else {
+      autoProgressao();
+    }
+  });
+
+  btnTreino.addEventListener('click', () => {
+    if(modoTreino) {
+      modoTreino = false;
+      btnTreino.textContent = "🧠 Modo Treino";
+      mostrarTodos();
+    } else {
+      iniciarTreino();
+    }
+  });
+
+  toggleNomenclatura.addEventListener('click', () => {
+    mostrarBemol = !mostrarBemol;
+    toggleNomenclatura.setAttribute('aria-pressed', mostrarBemol);
+    toggleNomenclatura.textContent = mostrarBemol ? "Mostrar Sustenidos" : "Mostrar Bemóis";
+    // Atualiza os botões dos tons
+    tonsDiv.innerHTML = '';
+    notasSharp.forEach((nota, i) => {
+      const nomeExibir = mostrarBemol ? notasFlat[i] : nota;
+      const btn = document.createElement("button");
+      btn.textContent = nomeExibir;
+      btn.type = 'button';
+      btn.addEventListener('click', () => {
+        tomAtual = nota;
+        acordeAtual = 0;
+        ativarBotaoTom(nomeExibir);
+        limpar();
+      });
+      tonsDiv.appendChild(btn);
+    });
+    ativarBotaoTom(converterNota(tomAtual));
+    mostrarTodos();
+  });
+
+  mostrarTodos();
+});
+</script>
 </body>
 </html>
