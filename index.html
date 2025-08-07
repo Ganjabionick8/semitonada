@@ -21,6 +21,10 @@
         <button id="btnGeral" type="button">Modo Geral</button>
         <button id="btnIndividual" type="button">Modo Individual</button>
         <button id="btnResetIndividual" type="button" style="display:none;">Resetar Individual</button>
+        <!-- Novos botões -->
+        <button id="btnToggleNotas" type="button" aria-pressed="false" title="Mostrar notas com sustenidos/bemóis">♯♭ Dupla Nomenclatura</button>
+        <button id="btnAnimacao" type="button" aria-pressed="false" title="Ativar progressão automática com animação">▶️ Animação</button>
+        <button id="btnQuiz" type="button" aria-pressed="false" title="Entrar no modo treino (quiz)">❓ Quiz</button>
       </div>
     </section>
 
@@ -120,6 +124,15 @@
           <p id="confirmacaoPix" style="color:#0f0; margin-top:0.5rem; display:none;">Chave Pix copiada para a área de transferência!</p>
         </article>
       </div>
+    </section>
+
+    <!-- Container do Quiz -->
+    <section id="quiz-container" style="display:none; margin-top:1rem;" aria-label="Modo Treino - Quiz musical">
+      <p id="quiz-pergunta" style="font-weight:600; font-size:1.2rem;">Pergunta vai aparecer aqui</p>
+      <div id="quiz-respostas" role="group" aria-label="Respostas do quiz"></div>
+      <p id="quiz-feedback" style="font-weight:700; margin-top:0.5rem;"></p>
+      <button id="btnProximaPergunta" type="button" style="display:none; margin-top:0.75rem;">Próxima</button>
+      <button id="btnSairQuiz" type="button" style="margin-top:0.75rem;">Sair do Quiz</button>
     </section>
   </main>
 
