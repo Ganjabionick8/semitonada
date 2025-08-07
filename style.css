@@ -8,6 +8,9 @@
   --fonte: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+/* Fonte techno opcional, descomente se quiser usar */
+/* @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap'); */
+
 * {
   box-sizing: border-box;
 }
@@ -25,6 +28,10 @@ body {
 .container {
   max-width: 800px;
   margin: auto;
+  box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
+  padding: var(--espacamento);
+  border-radius: 8px;
+  background-color: #181818;
 }
 
 h1 {
@@ -32,6 +39,7 @@ h1 {
   margin-bottom: 1.5rem;
   font-weight: 700;
   letter-spacing: 2px;
+  /* font-family: 'Orbitron', sans-serif;  Descomente para fonte techno */
 }
 
 .controles {
@@ -75,6 +83,14 @@ h1 {
   background: var(--cor-primaria);
 }
 
+.tom-btns button:focus,
+.modo-toggle button:focus,
+.acordes div:focus,
+.tabs button:focus {
+  outline: 2px solid var(--cor-primaria);
+  outline-offset: 2px;
+}
+
 .graus {
   display: flex;
   justify-content: space-around;
@@ -104,7 +120,7 @@ h1 {
   cursor: pointer;
   border-radius: 6px;
   padding: 0.4rem;
-  transition: background-color 0.3s ease;
+  transition: background-color 0.3s ease, color 0.3s ease;
   user-select: none;
 }
 
@@ -112,6 +128,10 @@ h1 {
   background-color: var(--cor-secundaria);
   color: #444;
   cursor: pointer;
+}
+
+.acordes div:not([data-fechado="true"]) {
+  cursor: default;
 }
 
 .acordes div:hover:not([data-fechado="true"]) {
@@ -158,6 +178,7 @@ h1 {
 .tabs button.ativo,
 .tabs button:hover {
   background: var(--cor-primaria);
+  border-bottom: 3px solid var(--cor-alerta);
 }
 
 .aba {
@@ -188,6 +209,8 @@ h1 {
 #confirmacaoPix {
   font-weight: 700;
   text-align: center;
+  margin-top: 0.5rem;
+  display: none;
 }
 
 @media (max-width: 600px) {
@@ -209,5 +232,18 @@ h1 {
   .graus div,
   .acordes div {
     margin-bottom: 0.5rem;
+  }
+}
+
+@media (max-width: 400px) {
+  .tom-btns button,
+  .modo-toggle button {
+    padding: 0.3rem 0.6rem;
+    font-size: 0.9rem;
+    min-width: 30px;
+  }
+
+  h1 {
+    font-size: 1.5rem;
   }
 }
