@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SemitONada Full</title>
 <style>
+  /* === Estilo Sci-Fi Minimalista Dark === */
   :root {
     --cor-fundo: #121212;
     --cor-texto: #eee;
     --cor-primaria: #0ff;
     --cor-secundaria: #088;
-    --cor-alerta: #0f0;
     --cor-accento: #ff4081;
     --cor-destaque: #ffd600;
     --espacamento: 1rem;
@@ -18,659 +18,305 @@
     --botao-bg: var(--cor-secundaria);
     --botao-hover-bg: var(--cor-primaria);
   }
-
-  body {
-    margin: 0;
-    background-color: var(--cor-fundo);
-    color: var(--cor-texto);
-    font-family: var(--fonte);
-    padding: var(--espacamento);
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-
-  h1 {
-    text-align: center;
-    margin-bottom: 1.5rem;
-    font-weight: 900;
-    color: var(--cor-primaria);
-    text-shadow: 0 0 10px var(--cor-primaria);
-  }
-
-  .controles {
-    display: flex;
-    gap: 0.5rem;
-    justify-content: center;
-    flex-wrap: wrap;
-    margin-bottom: 1rem;
-  }
-
-  button {
-    background: var(--botao-bg);
-    border: none;
-    color: var(--cor-texto);
-    padding: 0.5rem 1rem;
-    cursor: pointer;
-    border-radius: 6px;
-    font-weight: 700;
-    user-select: none;
-    transition: background-color 0.3s ease, box-shadow 0.3s ease;
-    box-shadow: 0 0 8px transparent;
-    min-width: 100px;
-    text-align: center;
-  }
-
-  button:hover,
-  button.ativo,
-  button[aria-pressed="true"] {
-    background: var(--botao-hover-bg);
-    box-shadow: 0 0 15px var(--cor-primaria);
-    color: var(--cor-fundo);
-  }
-
-  .graus, .acordes {
-    display: flex;
-    justify-content: space-around;
-    font-weight: 700;
-    font-size: 1.3rem;
-    margin-bottom: 1rem;
-    width: 100%;
-    max-width: 700px;
-  }
-
-  .graus div, .acordes div {
-    flex: 1;
-    text-align: center;
-    user-select: none;
-    padding: 0.3rem 0.1rem;
-    border-radius: 4px;
-    transition: background-color 0.3s ease, color 0.3s ease;
-  }
-
-  .acordes div[data-fechado="true"] {
-    color: #444;
-    cursor: default;
-    background: transparent;
-    box-shadow: none;
-  }
-
-  .acordes div:hover:not([data-fechado="true"]) {
-    background: var(--cor-primaria);
-    color: var(--cor-fundo);
-    cursor: pointer;
-    box-shadow: 0 0 8px var(--cor-primaria);
-  }
-
-  #meta {
-    text-align: center;
-    font-style: italic;
-    min-height: 1.5rem;
-    margin-bottom: 1rem;
-    font-size: 1rem;
-    color: var(--cor-destaque);
-    text-shadow: 0 0 6px var(--cor-destaque);
-    user-select: none;
-    max-width: 700px;
-  }
-
-  .aba {
-    display: none;
-    max-width: 700px;
-    margin: auto;
-    background: #1a1a1a;
-    border-radius: 8px;
-    padding: 1rem 1.5rem;
-    box-shadow: 0 0 15px #0ff6;
-    color: #ddd;
-  }
-
-  .aba.active {
-    display: block;
-  }
-
-  h2, h3 {
-    color: var(--cor-primaria);
-    text-shadow: 0 0 8px var(--cor-primaria);
-  }
-
-  ul {
-    padding-left: 1.2rem;
-    margin-top: 0.2rem;
-  }
-
-  ul li {
-    margin-bottom: 0.4rem;
-    line-height: 1.3em;
-  }
-
-  ul li b {
-    color: var(--cor-accento);
-  }
-
-  /* Funções harmônicas coloridas */
-  .func-tonica {
-    color: #4caf50; /* verde */
-    font-weight: 700;
-  }
-
-  .func-subdominante {
-    color: #ff9800; /* laranja */
-    font-weight: 700;
-  }
-
-  .func-dominante {
-    color: #f44336; /* vermelho */
-    font-weight: 700;
-  }
-
-  /* Quiz */
-  #quiz {
-    background: #222;
-    border-radius: 8px;
-    padding: 1rem 1.5rem;
-    margin-top: 1rem;
-    box-shadow: 0 0 12px #0ff9;
-    color: #eee;
-  }
-
-  #quiz h3 {
-    margin-top: 0;
-    color: var(--cor-destaque);
-  }
-
-  .quiz-pergunta {
-    margin-bottom: 1rem;
-  }
-
-  .quiz-opcao {
-    background: var(--botao-bg);
-    border-radius: 6px;
-    padding: 0.4rem 0.8rem;
-    margin: 0.2rem 0;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    user-select: none;
-  }
-
-  .quiz-opcao:hover {
-    background: var(--botao-hover-bg);
-    color: var(--cor-fundo);
-  }
-
-  .quiz-opcao.correta {
-    background: #4caf50;
-    color: #fff;
-    cursor: default;
-    box-shadow: 0 0 12px #4caf50aa;
-  }
-
-  .quiz-opcao.errada {
-    background: #f44336;
-    color: #fff;
-    cursor: default;
-    box-shadow: 0 0 12px #f44336aa;
-  }
-
-  /* Rodapé */
-  footer {
-    margin-top: auto;
-    margin-bottom: 1rem;
-    text-align: center;
-    font-size: 0.9rem;
-    color: var(--cor-primaria);
-    user-select: none;
-    max-width: 700px;
-  }
-
-  footer button {
-    margin-top: 0.5rem;
-    background: transparent;
-    border: 2px solid var(--cor-primaria);
-    color: var(--cor-primaria);
-    border-radius: 6px;
-    padding: 0.3rem 0.6rem;
-    font-weight: 700;
-    cursor: pointer;
-    transition: background-color 0.3s ease, color 0.3s ease;
-  }
-
-  footer button:hover {
-    background: var(--cor-primaria);
-    color: var(--cor-fundo);
-  }
-
-  #surpresa {
-    margin-top: 0.5rem;
-    font-weight: 700;
-    color: var(--cor-primaria);
-    display: none;
-    user-select: none;
-  }
-
-  @media (max-width: 600px) {
-    .graus, .acordes {
-      flex-direction: column;
-      gap: 0.5rem;
-    }
-    button {
-      min-width: 70px;
-      padding: 0.4rem 0.6rem;
-      font-size: 0.9rem;
-    }
-  }
+  body { margin:0; background:var(--cor-fundo); color:var(--cor-texto); font-family:var(--fonte); padding:var(--espacamento); display:flex; flex-direction:column; align-items:center; min-height:100vh; }
+  h1 { text-align:center; margin-bottom:1.5rem; font-weight:900; color:var(--cor-primaria); text-shadow:0 0 10px var(--cor-primaria); }
+  .controles { display:flex; gap:0.5rem; justify-content:center; flex-wrap:wrap; margin-bottom:1rem; }
+  button { background:var(--botao-bg); border:none; color:var(--cor-texto); padding:0.5rem 1rem; cursor:pointer; border-radius:6px; font-weight:700; user-select:none; transition:0.3s; min-width:100px; text-align:center; }
+  button:hover, button.ativo, button[aria-pressed="true"] { background:var(--botao-hover-bg); box-shadow:0 0 15px var(--cor-primaria); color:var(--cor-fundo); }
+  .graus, .acordes { display:flex; justify-content:space-around; font-weight:700; font-size:1.3rem; margin-bottom:1rem; width:100%; max-width:700px; }
+  .graus div, .acordes div { flex:1; text-align:center; user-select:none; padding:0.3rem 0.1rem; border-radius:4px; transition:0.3s; }
+  .acordes div[data-fechado="true"] { color:#444; cursor:default; background:transparent; box-shadow:none; }
+  .acordes div:hover:not([data-fechado="true"]) { background:var(--cor-primaria); color:var(--cor-fundo); cursor:pointer; box-shadow:0 0 8px var(--cor-primaria); }
+  #meta { text-align:center; font-style:italic; min-height:1.5rem; margin-bottom:1rem; font-size:1rem; color:var(--cor-destaque); text-shadow:0 0 6px var(--cor-destaque); user-select:none; max-width:700px; }
+  .aba { display:none; max-width:700px; margin:auto; background:#1a1a1a; border-radius:8px; padding:1rem 1.5rem; box-shadow:0 0 15px #0ff6; color:#ddd; }
+  .aba.active { display:block; }
+  h2, h3 { color:var(--cor-primaria); text-shadow:0 0 8px var(--cor-primaria); }
+  ul { padding-left:1.2rem; margin-top:0.2rem; }
+  ul li { margin-bottom:0.4rem; line-height:1.3em; }
+  ul li b { color:var(--cor-accento); }
+  .func-tonica { color:#4caf50; font-weight:700; }
+  .func-subdominante { color:#ff9800; font-weight:700; }
+  .func-dominante { color:#f44336; font-weight:700; }
+  #quiz { background:#222; border-radius:8px; padding:1rem 1.5rem; margin-top:1rem; box-shadow:0 0 12px #0ff9; color:#eee; }
+  #quiz h3 { margin-top:0; color:var(--cor-destaque); }
+  .quiz-pergunta { margin-bottom:1rem; }
+  .quiz-opcao { background:var(--botao-bg); border-radius:6px; padding:0.4rem 0.8rem; margin:0.2rem 0; cursor:pointer; transition:0.3s; user-select:none; }
+  .quiz-opcao:hover { background:var(--botao-hover-bg); color:var(--cor-fundo); }
+  .quiz-opcao.correta { background:#4caf50; color:#fff; cursor:default; box-shadow:0 0 12px #4caf50aa; }
+  .quiz-opcao.errada { background:#f44336; color:#fff; cursor:default; box-shadow:0 0 12px #f44336aa; }
+  footer { margin-top:auto; margin-bottom:1rem; text-align:center; font-size:0.9rem; color:var(--cor-primaria); user-select:none; max-width:700px; }
+  footer button { margin-top:0.5rem; background:transparent; border:2px solid var(--cor-primaria); color:var(--cor-primaria); border-radius:6px; padding:0.3rem 0.6rem; font-weight:700; cursor:pointer; transition:0.3s; }
+  footer button:hover { background:var(--cor-primaria); color:var(--cor-fundo); }
+  #surpresa { margin-top:0.5rem; font-weight:700; color:var(--cor-primaria); display:none; user-select:none; }
+  @media(max-width:600px){.graus,.acordes{flex-direction:column;gap:0.5rem;}button{min-width:70px;padding:0.4rem 0.6rem;font-size:0.9rem;}}
 </style>
 </head>
 <body>
-  <h1>SemitONada Full</h1>
+<h1>SemitONada </h1>
 
-  <div class="controles modo-toggle" aria-label="Seleção de modo">
-    <button id="toggleModo" aria-pressed="false" aria-label="Alternar modo maior/menor">Modo: Maior</button>
-  </div>
+<!-- === Controles do Modo Maior/Menor === -->
+<div class="controles modo-toggle" aria-label="Seleção de modo">
+  <button id="toggleModo" aria-pressed="false" aria-label="Alternar modo maior/menor">Modo: Maior</button>
+</div>
 
-  <div class="controles tom-btns" id="tons" aria-label="Seleção de tom"></div>
+<!-- === Botões de tom === -->
+<div class="controles tom-btns" id="tons" aria-label="Seleção de tom"></div>
 
-  <div class="graus" aria-label="Graus harmônicos">
-    <div>I</div><div>ii</div><div>iii</div><div>IV</div><div>V</div><div>vi</div><div>vii°</div>
-  </div>
+<!-- === Graus Harmônicos === -->
+<div class="graus" aria-label="Graus harmônicos">
+  <div>I</div><div>ii</div><div>iii</div><div>IV</div><div>V</div><div>vi</div><div>vii°</div>
+</div>
 
-  <div class="acordes" id="acordes" aria-live="polite" aria-label="Acordes do campo harmônico"></div>
+<!-- === Acordes do Campo Harmônico === -->
+<div class="acordes" id="acordes" aria-live="polite" aria-label="Acordes do campo harmônico"></div>
+<div id="meta" aria-live="polite"></div>
 
-  <div id="meta" aria-live="polite"></div>
+<!-- === Controles de Progressão === -->
+<div class="controles animacao-container" aria-label="Controle de progressão">
+  <button id="btnPlayProg" aria-label="Tocar progressão">▶ Tocar Progressão</button>
+  <button id="btnPauseProg" style="display:none;" aria-label="Parar progressão">■ Parar</button>
+  <button id="btnProgDefinir">Definir Sequência</button>
+</div>
 
-  <div class="controles animacao-container" aria-label="Controle de progressão">
-    <button id="btnPlayProg" aria-label="Tocar progressão">▶ Tocar Progressão</button>
-    <button id="btnPauseProg" style="display:none;" aria-label="Parar progressão">■ Parar</button>
-  </div>
+<!-- === Mostrar todos / individual / abas === -->
+<div class="controles" style="justify-content:center; margin-bottom:1rem;">
+  <button id="btnGeral" aria-label="Mostrar todos acordes">Mostrar Todos</button>
+  <button id="btnIndividual" aria-label="Modo individual">Modo Individual</button>
+  <button id="btnResetIndividual" style="display:none;" aria-label="Resetar modo individual">Resetar Individual</button>
+  <button id="btnToggleTeoria" aria-expanded="false" aria-controls="aba-teoria" aria-label="Mostrar/Ocultar teoria">Teoria</button>
+  <button id="btnToggleHistoria" aria-expanded="false" aria-controls="aba-historia" aria-label="Mostrar/Ocultar história">História</button>
+</div>
 
-  <div class="controles" style="justify-content:center; margin-bottom: 1rem;">
-    <button id="btnGeral" aria-label="Mostrar todos acordes">Mostrar Todos</button>
-    <button id="btnIndividual" aria-label="Modo individual">Modo Individual</button>
-    <button id="btnResetIndividual" style="display:none;" aria-label="Resetar modo individual">Resetar Individual</button>
-    <button id="btnToggleTeoria" aria-expanded="false" aria-controls="aba-teoria" aria-label="Mostrar/Ocultar teoria">Teoria</button>
-  </div>
+<!-- === Abas de Teoria e História === -->
+<div class="aba" id="aba-teoria" role="region" aria-live="polite">
+  <h2>Teoria Completa do Campo Harmônico</h2>
+  <p>O campo harmônico é um <strong>conjunto de acordes</strong> formados a partir das notas de uma escala, organizados por graus.</p>
+  <h3>Campo Harmônico Maior</h3>
+  <ul>
+    <li><b class="func-tonica">I</b> – maior (<span class="func-tonica">tônica</span>)</li>
+    <li><b class="func-subdominante">ii</b> – menor (<span class="func-subdominante">supertônica</span>)</li>
+    <li><b class="func-subdominante">iii</b> – menor (<span class="func-subdominante">mediante</span>)</li>
+    <li><b class="func-subdominante">IV</b> – maior (<span class="func-subdominante">subdominante</span>)</li>
+    <li><b class="func-dominante">V</b> – maior (<span class="func-dominante">dominante</span>)</li>
+    <li><b class="func-tonica">vi</b> – menor (<span class="func-tonica">submediante</span>)</li>
+    <li><b class="func-dominante">vii°</b> – diminuto (<span class="func-dominante">sensível</span>)</li>
+  </ul>
+  <h3>Campo Harmônico Menor Natural</h3>
+  <ul>
+    <li><b class="func-tonica">i</b> – menor (<span class="func-tonica">tônica</span>)</li>
+    <li><b class="func-dominante">ii°</b> – diminuto (<span class="func-dominante">supertônica</span>)</li>
+    <li><b class="func-subdominante">III</b> – maior (<span class="func-subdominante">mediante</span>)</li>
+    <li><b class="func-subdominante">iv</b> – menor (<span class="func-subdominante">subdominante</span>)</li>
+    <li><b class="func-dominante">v</b> – menor (<span class="func-dominante">dominante</span>)</li>
+    <li><b class="func-tonica">VI</b> – maior (<span class="func-tonica">submediante</span>)</li>
+    <li><b class="func-tonica">VII</b> – maior (<span class="func-tonica">subtônica</span>)</li>
+  </ul>
+</div>
 
-  <div class="aba" id="aba-teoria" role="region" aria-live="polite">
-    <h2>Teoria Completa do Campo Harmônico</h2>
-    <p>O campo harmônico é um <strong>conjunto de acordes</strong> formados a partir das notas de uma escala, organizados por graus. Ele é fundamental para entender as progressões e funções harmônicas dentro de uma tonalidade.</p>
-    
-    <h3>Campo Harmônico Maior</h3>
-    <ul>
-      <li><b class="func-tonica">I</b> – maior (<span class="func-tonica">tônica</span>)</li>
-      <li><b class="func-subdominante">ii</b> – menor (<span class="func-subdominante">supertônica</span>)</li>
-      <li><b class="func-subdominante">iii</b> – menor (<span class="func-subdominante">mediante</span>)</li>
-      <li><b class="func-subdominante">IV</b> – maior (<span class="func-subdominante">subdominante</span>)</li>
-      <li><b class="func-dominante">V</b> – maior (<span class="func-dominante">dominante</span>)</li>
-      <li><b class="func-tonica">vi</b> – menor (<span class="func-tonica">submediante</span>)</li>
-      <li><b class="func-dominante">vii°</b> – diminuto (<span class="func-dominante">sensível</span>)</li>
-    </ul>
+<div class="aba" id="aba-historia" role="region" aria-live="polite">
+  <h2>História e Cultura Musical</h2>
+  <p>A música é uma linguagem universal que evoluiu ao longo dos séculos, refletindo a cultura, a tecnologia e as emoções humanas. Desde os tempos antigos, a música tem sido usada em rituais, celebrações e expressões artísticas.</p>
+  <h3>🎼A Musica no Ocidente</h3>
+  <p>No início da Idade Média, a música começou a ser registrada em notação, permitindo a preservação de melodias e a transmissão de conhecimento. Entre os séculos XIV e XVIII, surgiram escalas temperadas e a música passou a explorar cada vez mais harmonia e contraponto. Instrumentos de corda, sopros e percussão evoluíram constantemente, dando origem a orquestras e conjuntos complexos. Durante o período clássico, compositores como Beethoven consolidaram técnicas que influenciam até hoje a música ocidental.</p>
 
-    <h3>Campo Harmônico Menor Natural</h3>
-    <ul>
-      <li><b class="func-tonica">i</b> – menor (<span class="func-tonica">tônica</span>)</li>
-      <li><b class="func-dominante">ii°</b> – diminuto (<span class="func-dominante">supertônica</span>)</li>
-      <li><b class="func-subdominante">III</b> – maior (<span class="func-subdominante">mediante</span>)</li>
-      <li><b class="func-subdominante">iv</b> – menor (<span class="func-subdominante">subdominante</span>)</li>
-      <li><b class="func-dominante">v</b> – menor (<span class="func-dominante">dominante</span>)</li>
-      <li><b class="func-tonica">VI</b> – maior (<span class="func-tonica">submediante</span>)</li>
-      <li><b class="func-tonica">VII</b> – maior (<span class="func-tonica">subtônica</span>)</li>
-    </ul>
+  <h3>🌏 A Musica no Oriente</h3>
+  <p>Desde tempos antigos, a música era transmitida oralmente, mantendo modos microtonais e grande liberdade para improvisação. Ela estava profundamente ligada a rituais religiosos, danças e festivais, refletindo a cultura de cada região. Instrumentos como sitar, koto e gamelão eram usados para expressar emoções e histórias, e cada interpretação podia variar dependendo do contexto social e do intérprete.</p>
 
-    <p>Entender essas estruturas é essencial para criar progressões harmônicas sólidas, improvisar e compor com segurança.</p>
+  <h3>🕰 A Musica no Contexto social</h3>
+  <p>A música sempre refletiu os valores, crenças e festas de cada sociedade. No Ocidente, compositores eram muitas vezes ligados à Igreja ou às cortes, enquanto no Oriente, músicos participavam de cerimônias religiosas e celebrações populares. Ao longo do tempo, a música conectou pessoas e épocas, funcionando como registro cultural e expressão artística.</p>
 
-    <h3>Exemplo prático:</h3>
-    <p>Na tonalidade de <strong>C maior</strong>, o campo harmônico possui os seguintes acordes:</p>
-    <ul>
-      <li><b>C</b> (I maior) - tônica</li>
-      <li><b>Dm</b> (ii menor) - supertônica</li>
-      <li><b>Em</b> (iii menor) - mediante</li>
-      <li><b>F</b> (IV maior) - subdominante</li>
-      <li><b>G</b> (V maior) - dominante</li>
-      <li><b>Am</b> (vi menor) - submediante</li>
-      <li><b>Bdim</b> (vii° diminuto) - sensível</li>
-    </ul>
+  <h3>🎹 Instrumentos e timbres</h3>
+  <p>A evolução dos instrumentos permitiu que diferentes timbres moldassem a percepção da música. Cordas, sopros, percussão e, mais recentemente, eletrônicos transformaram a forma como ouvimos e interpretamos sons. Cada timbre acrescenta nuances à harmonia e à emoção transmitida pela música.</p>
 
-    <p>Uma progressão muito usada é <strong>I - IV - V - I</strong> (ex: C - F - G - C), que reforça a tonalidade e cria movimento musical.</p>
+  <h3>🎶 Exemplos práticos</h3>
+  <p>No Ocidente clássico, Beethoven representou a consolidação da harmonia e da forma musical. No Oriente, Ravi Shankar trouxe a música indiana ao mundo, mostrando como improvisação e modos microtonais criam experiências únicas. No século XX e XXI, jazz moderno, música eletrônica e fusões culturais mostram como a música continua a evoluir e se reinventar.</p>
 
-    <hr style="border-color: var(--cor-secundaria); margin: 1.5rem 0;">
+  <h3>💡 Aprenda</h3>
+  <p>Estude a música em seu contexto histórico e cultural. Identifique tons, intervalos e funções harmônicas em diferentes períodos. Pratique tocar, combinar sons e observar como a música reflete a sociedade e a criatividade de cada época.</p>
 
-    <div id="quiz" aria-label="Quiz de Campo Harmônico">
-      <h3>Quiz Rápido</h3>
-      <div id="pergunta" class="quiz-pergunta"></div>
-      <div id="opcoes"></div>
-      <div id="feedback" aria-live="assertive" style="margin-top:0.5rem; min-height:1.2em;"></div>
-      <button id="btnProxima" style="margin-top:1rem; display:none;">Próxima</button>
-    </div>
-  </div>
+  <h3>Exemplo prático</h3>
+  <p>Na tonalidade de <strong>C maior</strong>, o campo harmônico possui os seguintes acordes:</p>
+  <ul>
+    <li><b>C</b> (I maior) - tônica</li>
+    <li><b>Dm</b> (ii menor) - supertônica</li>
+    <li><b>Em</b> (iii menor) - mediante</li>
+    <li><b>F</b> (IV maior) - subdominante</li>
+    <li><b>G</b> (V maior) - dominante</li>
+    <li><b>Am</b> (vi menor) - submediante</li>
+    <li><b>Bdim</b> (vii° diminuto) - sensível</li>
+  </ul>
 
-  <footer>
-    Isso é estudar música <br />
-    <button id="btnSurpresa" aria-label="Mensagem surpresa">Clique para surpresa 🎁</button>
-    <div id="surpresa" role="alert" aria-live="polite"></div>
-    <p>Desenvolvido por <a href="https://github.com/Ganjabionick8" target="_blank" rel="noopener noreferrer">@Ganjabionick8</a> – SemitONada™ © 2025</p>
-  </footer>
+  <p>Uma progressão muito usada é <strong>I - IV - V - I</strong> (ex: C - F - G - C), que reforça a tonalidade e cria movimento musical.</p>
+</div>
+
+<!-- === Quiz === -->
+<div id="quiz" aria-label="Quiz de Campo Harmônico">
+  <h3>Quiz Rápido</h3>
+  <div id="pergunta" class="quiz-pergunta"></div>
+  <div id="opcoes"></div>
+  <div id="feedback" aria-live="assertive" style="margin-top:0.5rem; min-height:1.2em;"></div>
+  <button id="btnProxima" style="margin-top:1rem; display:none;">Próxima</button>
+</div>
+
+<!-- === Footer / Surpresa === -->
+<footer>
+  Isso é estudar música <br>
+  <button id="btnSurpresa" aria-label="Mensagem surpresa">Clique para surpresa 🎁</button>
+  <div id="surpresa" role="alert" aria-live="polite"></div>
+  <p>Desenvolvido por <a href="https://github.com/Ganjabionick8" target="_blank" rel="noopener noreferrer">@Ganjabionick8</a> – SemitONada™ © 2025</p>
+</footer>
 
 <script>
-  // Notas e escalas
-  const notas = ['C', 'C#', 'D', 'Eb', 'E', 'F', 'F#', 'G', 'G#', 'A', 'Bb', 'B'];
+/* ================================
+   SCRIPT DIDÁTICO
+   ================================ */
 
-  const campos = {
-    maior: {
-      intervalos: [0, 2, 4, 5, 7, 9, 11],
-      sufixos: ["", "m", "m", "", "", "m", "°"]
-    },
-    menor: {
-      intervalos: [0, 2, 3, 5, 7, 8, 10],
-      sufixos: ["m", "°", "", "m", "m", "", ""]
-    }
-  };
+/* --- 1. Notas e escalas --- */
+const notas=['C','C#','D','Eb','E','F','F#','G','G#','A','Bb','B'];
+const campos={
+  maior:{intervalos:[0,2,4,5,7,9,11],sufixos:["","m","m","","","m","°"]},
+  menor:{intervalos:[0,2,3,5,7,8,10],sufixos:["m","°","","m","m","",""]}
+};
 
-  let modoAtual = 'maior';
-  let tomAtual = 'C';
-  let progressaoAtiva = false;
-  let progIndex = 0;
-  let intervaloProg = null;
+/* --- Estado atual --- */
+let modoAtual='maior', tomAtual='C';
+let progressaoAtiva=false, progIndex=0, intervaloProg=null, progressaoDefinida=[];
 
-  // Elementos
-  const tonsDiv = document.getElementById("tons");
-  const acordesDiv = document.getElementById("acordes");
-  const metaDiv = document.getElementById("meta");
-  const toggleBtn = document.getElementById("toggleModo");
-  const btnPlayProg = document.getElementById("btnPlayProg");
-  const btnPauseProg = document.getElementById("btnPauseProg");
-  const btnGeral = document.getElementById("btnGeral");
-  const btnIndividual = document.getElementById("btnIndividual");
-  const btnResetIndividual = document.getElementById("btnResetIndividual");
-  const btnToggleTeoria = document.getElementById("btnToggleTeoria");
-  const abaTeoria = document.getElementById("aba-teoria");
-  const btnSurpresa = document.getElementById("btnSurpresa");
-  const surpresaDiv = document.getElementById("surpresa");
+/* --- Elementos do DOM --- */
+const tonsDiv=document.getElementById("tons");
+const acordesDiv=document.getElementById("acordes");
+const metaDiv=document.getElementById("meta");
+const toggleBtn=document.getElementById("toggleModo");
+const btnPlayProg=document.getElementById("btnPlayProg");
+const btnPauseProg=document.getElementById("btnPauseProg");
+const btnGeral=document.getElementById("btnGeral");
+const btnIndividual=document.getElementById("btnIndividual");
+const btnResetIndividual=document.getElementById("btnResetIndividual");
+const btnToggleTeoria=document.getElementById("btnToggleTeoria");
+const abaTeoria=document.getElementById("aba-teoria");
+const btnToggleHistoria=document.getElementById("btnToggleHistoria");
+const abaHistoria=document.getElementById("aba-historia");
+const btnProgDefinir=document.getElementById("btnProgDefinir");
+const btnSurpresa=document.getElementById("btnSurpresa");
+const surpresaDiv=document.getElementById("surpresa");
 
-  // Frases para surpresa
-  const frasesSurpresa = [
-    "Parabéns! Você encontrou a surpresa 🎉🔥",
-    "O poder do campo harmônico está com você! ⚡️",
-    "Estudar música nunca foi tão divertido! 🎶😎",
-    "Seu conhecimento tá subindo de nível! 🚀🎸",
-    "Surpresa desbloqueada: Você é um mestre das escalas! 👑",
-    "Continue assim, o mundo vai ouvir sua música! 🌍🎵",
-    "Campo harmônico: o segredo dos mestres! 🕵️‍♂️",
-    "Não pare agora, o show só começou! 🎤🎹",
-    "Mais um passo para ser lenda musical! 🎸🔥",
-    "Escalas e acordes na ponta dos dedos! 🎼✨"
-  ];
+/* --- Frases surpresa --- */
+const frasesSurpresa=[
+  "Parabéns! Você encontrou a surpresa 🎉🔥",
+  "O poder do campo harmônico está com você! ⚡️",
+  "Você é praticamente um mestre musical 😎",
+  "Hoje você aprendeu algo novo! 🎶",
+  "Continue praticando, jovem padawan da música 🪐"
+];
 
-  // Função para montar os botões de tons
-  function montarBotoesTons() {
-    tonsDiv.innerHTML = '';
-    notas.forEach(nota => {
-      const btn = document.createElement('button');
-      btn.textContent = nota;
-      btn.setAttribute('aria-label', `Selecionar tom ${nota}`);
-      btn.classList.toggle('ativo', nota === tomAtual);
-      btn.onclick = () => {
-        tomAtual = nota;
-        montarBotoesTons();
-        atualizarAcordes();
-        metaDiv.textContent = `Tom selecionado: ${tomAtual} (${modoAtual})`;
-      };
-      tonsDiv.appendChild(btn);
-    });
-  }
+/* --- 2. Criar botões de tom --- */
+function criarBotoesTons(){
+  tonsDiv.innerHTML="";
+  notas.forEach(nota=>{
+    const b=document.createElement("button");
+    b.textContent=nota;
+    b.onclick=()=>{ tomAtual=nota; atualizarAcordes(); metaDiv.textContent="Tom alterado para "+nota; };
+    if(nota===tomAtual) b.classList.add("ativo");
+    tonsDiv.appendChild(b);
+  });
+}
 
-  // Função para calcular notas do acorde
-  function calcularAcorde(tom, intervalo, sufixo) {
-    const indice = (notas.indexOf(tom) + intervalo) % 12;
-    return notas[indice] + sufixo;
-  }
+/* --- 3. Atualizar acordes --- */
+function atualizarAcordes(){
+  acordesDiv.innerHTML="";
+  const escala=campos[modoAtual].intervalos.map(i=>notas[(notas.indexOf(tomAtual)+i)%12]);
+  const sufixos=campos[modoAtual].sufixos;
+  escala.forEach((n,i)=>{
+    const d=document.createElement("div");
+    d.textContent=n+sufixos[i];
+    acordesDiv.appendChild(d);
+  });
+  document.querySelectorAll("#tons button").forEach(b=>b.classList.toggle("ativo",b.textContent===tomAtual));
+  toggleBtn.textContent="Modo: "+(modoAtual==="maior"?"Maior":"Menor");
+}
 
-  // Atualiza os acordes na tela
-  function atualizarAcordes() {
-    const escala = campos[modoAtual];
-    acordesDiv.innerHTML = '';
-    for(let i=0; i<7; i++) {
-      const acordeNota = calcularAcorde(tomAtual, escala.intervalos[i], escala.sufixos[i]);
-      const div = document.createElement('div');
-      div.textContent = acordeNota;
-      div.setAttribute('data-fechado', 'false');
-      div.title = `Grau ${i+1}: ${acordeNota}`;
-      acordesDiv.appendChild(div);
-    }
-    metaDiv.textContent = `Campo harmônico em ${tomAtual} (${modoAtual})`;
-  }
+/* --- 4. Alternar modo maior/menor --- */
+toggleBtn.onclick=()=>{ modoAtual=modoAtual==="maior"?"menor":"maior"; atualizarAcordes(); };
 
-  // Alterna modo maior/menor
-  toggleBtn.onclick = () => {
-    modoAtual = modoAtual === 'maior' ? 'menor' : 'maior';
-    toggleBtn.textContent = `Modo: ${modoAtual.charAt(0).toUpperCase() + modoAtual.slice(1)}`;
-    toggleBtn.setAttribute('aria-pressed', modoAtual === 'menor');
-    atualizarAcordes();
-    metaDiv.textContent = `Modo alterado para: ${modoAtual}`;
-  };
+/* --- 5. Progressão automática --- */
+function tocarProgressaoSequencia(seq){
+  if(progressaoAtiva) return;
+  progressaoAtiva=true; progIndex=0;
+  btnPlayProg.style.display='none'; btnPauseProg.style.display='inline-block';
+  const divs=acordesDiv.children;
+  intervaloProg=setInterval(()=>{
+    Array.from(divs).forEach(d=>d.dataset.fechado="true");
+    const idx=parseInt(seq[progIndex]-1);
+    if(divs[idx]) divs[idx].dataset.fechado="false";
+    metaDiv.textContent="Tocando grau "+seq[progIndex];
+    progIndex++; if(progIndex>=seq.length) progIndex=0;
+  },1000);
+}
+btnPlayProg.onclick=()=>{ tocarProgressaoSequencia(progressaoDefinida.length?progressaoDefinida:['1','2','3','4','5','6','7']); };
+btnPauseProg.onclick=()=>{ clearInterval(intervaloProg); btnPlayProg.style.display='inline-block'; btnPauseProg.style.display='none'; progressaoAtiva=false; metaDiv.textContent='Progressão pausada.'; };
 
-  // Progressão automática
-  btnPlayProg.onclick = () => {
-    if(progressaoAtiva) return;
-    progressaoAtiva = true;
-    progIndex = 0;
-    btnPlayProg.style.display = 'none';
-    btnPauseProg.style.display = 'inline-block';
-    mostrarProximoAcorde();
-    intervaloProg = setInterval(() => {
-      progIndex++;
-      if(progIndex >= 7) {
-        clearInterval(intervaloProg);
-        btnPlayProg.style.display = 'inline-block';
-        btnPauseProg.style.display = 'none';
-        progressaoAtiva = false;
-        metaDiv.textContent = `Progressão completa.`;
-        return;
-      }
-      mostrarProximoAcorde();
-    }, 1500);
-  };
+/* --- 6. Definir progressão --- */
+btnProgDefinir.onclick=()=>{
+  let seq=prompt("Digite a sequência de graus separados por '-' (ex: 1-4-5-2)");
+  if(seq){ progressaoDefinida=seq.split("-").map(x=>x.trim()).filter(x=>x); metaDiv.textContent="Progressão definida: "+progressaoDefinida.join("-"); }
+};
 
-  btnPauseProg.onclick = () => {
-    clearInterval(intervaloProg);
-    btnPlayProg.style.display = 'inline-block';
-    btnPauseProg.style.display = 'none';
-    progressaoAtiva = false;
-    metaDiv.textContent = 'Progressão pausada.';
-  };
+/* --- 7. Modo geral / individual --- */
+btnGeral.onclick=()=>{ atualizarAcordes(); btnResetIndividual.style.display='none'; };
+btnIndividual.onclick=()=>{
+  Array.from(acordesDiv.children).forEach(d=>d.dataset.fechado="true");
+  btnResetIndividual.style.display='inline-block';
+  metaDiv.textContent="Modo individual ativado. Clique nos acordes para revelar.";
+};
+btnResetIndividual.onclick=()=>{ atualizarAcordes(); btnResetIndividual.style.display='none'; metaDiv.textContent="Modo individual resetado."; };
+acordesDiv.onclick=e=>{
+  if(e.target.dataset.fechado==="true") e.target.dataset.fechado="false";
+};
 
-  // Mostrar acorde atual em destaque na progressão
-  function mostrarProximoAcorde() {
-    const filhos = acordesDiv.children;
-    for(let i=0; i<filhos.length; i++) {
-      filhos[i].style.background = i === progIndex ? 'var(--cor-primaria)' : '';
-      filhos[i].style.color = i === progIndex ? 'var(--cor-fundo)' : '';
-    }
-    const escala = campos[modoAtual];
-    const acordeNota = calcularAcorde(tomAtual, escala.intervalos[progIndex], escala.sufixos[progIndex]);
-    metaDiv.textContent = `Tocando acorde: ${acordeNota}`;
-  }
+/* --- 8. Toggle abas --- */
+btnToggleTeoria.onclick=()=>{ abaTeoria.classList.toggle("active"); btnToggleTeoria.setAttribute("aria-expanded", abaTeoria.classList.contains("active")); };
+btnToggleHistoria.onclick=()=>{ abaHistoria.classList.toggle("active"); btnToggleHistoria.setAttribute("aria-expanded", abaHistoria.classList.contains("active")); };
 
-  // Mostrar todos os acordes
-  btnGeral.onclick = () => {
-    for(const div of acordesDiv.children) {
-      div.style.display = 'block';
-      div.setAttribute('data-fechado', 'false');
-    }
-    metaDiv.textContent = 'Todos os acordes exibidos.';
-  };
+/* --- 9. Surpresa --- */
+btnSurpresa.onclick=()=>{ 
+  surpresaDiv.textContent=frasesSurpresa[Math.floor(Math.random()*frasesSurpresa.length)]; 
+  surpresaDiv.style.display="block"; 
+};
 
-  // Modo individual (aparece um acorde por vez) com nota correta no meta
-  btnIndividual.onclick = () => {
-    for(let i=0; i<acordesDiv.children.length; i++) {
-      acordesDiv.children[i].style.display = i === 0 ? 'block' : 'none';
-      acordesDiv.children[i].setAttribute('data-fechado', i !== 0 ? 'true' : 'false');
-    }
-    metaDiv.textContent = `Mostrando acorde 1 de 7: ${acordesDiv.children[0].textContent}`;
-    btnResetIndividual.style.display = 'inline-block';
-    btnIndividual.style.display = 'none';
-
-    let atual = 0;
-    acordesDiv.onclick = (e) => {
-      if(e.target.tagName !== 'DIV') return;
-      acordesDiv.children[atual].style.display = 'none';
-      acordesDiv.children[atual].setAttribute('data-fechado', 'true');
-      atual++;
-      if(atual >= acordesDiv.children.length) {
-        metaDiv.textContent = 'Modo individual finalizado.';
-        btnResetIndividual.style.display = 'none';
-        btnIndividual.style.display = 'inline-block';
-        for(const div of acordesDiv.children) {
-          div.style.display = 'block';
-          div.setAttribute('data-fechado', 'false');
-        }
-        acordesDiv.onclick = null;
-      } else {
-        acordesDiv.children[atual].style.display = 'block';
-        acordesDiv.children[atual].setAttribute('data-fechado', 'false');
-        metaDiv.textContent = `Mostrando acorde ${atual+1} de 7: ${acordesDiv.children[atual].textContent}`;
-      }
+/* --- 10. Quiz --- */
+const perguntas=[
+  {q:"Qual é o acorde do IV grau no campo maior?", op:["F","Fm","F#","E"], r:0},
+  {q:"Qual grau é dominante?", op:["I","V","vi","ii"], r:1},
+  {q:"No campo menor natural, qual é o acorde do i?", op:["m","°","M","m7"], r:0},
+  {q:"Qual acorde é diminuto no campo maior?", op:["vii°","iii","ii","V"], r:0},
+  {q:"Qual grau é subdominante?", op:["IV","V","vi","I"], r:0}
+  
+];
+let quizIndex=0;
+function mostrarPergunta(){ 
+  const p=perguntas[quizIndex];
+  document.getElementById("pergunta").textContent=p.q;
+  const opcoesDiv=document.getElementById("opcoes"); opcoesDiv.innerHTML="";
+  p.op.forEach((o,i)=>{
+    const btn=document.createElement("div");
+    btn.textContent=o; btn.className="quiz-opcao";
+    btn.onclick=()=>{ 
+      Array.from(opcoesDiv.children).forEach(b=>b.onclick=null); 
+      if(i===p.r){ btn.classList.add("correta"); document.getElementById("feedback").textContent="✅ Correto!"; } 
+      else { btn.classList.add("errada"); document.getElementById("feedback").textContent="❌ Errado!"; } 
+      document.getElementById("btnProxima").style.display="inline-block";
     };
-  };
+    opcoesDiv.appendChild(btn);
+  });
+  document.getElementById("feedback").textContent=""; 
+  document.getElementById("btnProxima").style.display="none";
+}
+document.getElementById("btnProxima").onclick=()=>{
+  quizIndex++; if(quizIndex>=perguntas.length) quizIndex=0; mostrarPergunta();
+};
 
-  // Resetar modo individual
-  btnResetIndividual.onclick = () => {
-    for(const div of acordesDiv.children) {
-      div.style.display = 'block';
-      div.setAttribute('data-fechado', 'false');
-    }
-    metaDiv.textContent = 'Modo individual resetado.';
-    btnResetIndividual.style.display = 'none';
-    btnIndividual.style.display = 'inline-block';
-    acordesDiv.onclick = null;
-  };
-
-  // Mostrar/ocultar teoria
-  btnToggleTeoria.onclick = () => {
-    const aberto = abaTeoria.classList.toggle('active');
-    btnToggleTeoria.setAttribute('aria-expanded', aberto);
-    btnToggleTeoria.textContent = aberto ? 'Esconder Teoria' : 'Teoria';
-  };
-
-  // Mensagem surpresa com frases aleatórias e sumiço automático
-  btnSurpresa.onclick = () => {
-    const frase = frasesSurpresa[Math.floor(Math.random() * frasesSurpresa.length)];
-    surpresaDiv.textContent = frase;
-    surpresaDiv.style.display = 'block';
-    surpresaDiv.style.opacity = '1';
-    // Apaga a mensagem depois de 5 segundos
-    setTimeout(() => {
-      let op = 1;
-      const fade = setInterval(() => {
-        op -= 0.05;
-        if(op <= 0) {
-          clearInterval(fade);
-          surpresaDiv.style.display = 'none';
-          surpresaDiv.textContent = '';
-          surpresaDiv.style.opacity = '1';
-        } else {
-          surpresaDiv.style.opacity = op.toString();
-        }
-      }, 50);
-    }, 5000);
-  };
-
-  // --- Quiz ---
-  const quizData = [
-    {
-      pergunta: "Qual é o acorde no grau V do campo harmônico maior?",
-      opcoes: ["Menor", "Maior", "Diminuto"],
-      correta: 1
-    },
-    {
-      pergunta: "Qual função harmônica tem o acorde IV?",
-      opcoes: ["Tônica", "Dominante", "Subdominante"],
-      correta: 2
-    },
-    {
-      pergunta: "No campo harmônico menor natural, qual acorde é diminuto?",
-      opcoes: ["ii°", "v", "VI"],
-      correta: 0
-    },
-    {
-      pergunta: "Qual é o modo atual padrão ao iniciar o app?",
-      opcoes: ["Maior", "Menor"],
-      correta: 0
-    },
-    {
-      pergunta: "O grau vii° no campo harmônico maior é:",
-      opcoes: ["Diminuto", "Maior", "Menor"],
-      correta: 0
-    }
-  ];
-
-  const perguntaEl = document.getElementById('pergunta');
-  const opcoesEl = document.getElementById('opcoes');
-  const feedbackEl = document.getElementById('feedback');
-  const btnProxima = document.getElementById('btnProxima');
-
-  let quizIndex = 0;
-  let quizRespondido = false;
-
-  function carregarPergunta() {
-    quizRespondido = false;
-    feedbackEl.textContent = '';
-    btnProxima.style.display = 'none';
-
-    const item = quizData[quizIndex];
-    perguntaEl.textContent = `${quizIndex + 1}. ${item.pergunta}`;
-    opcoesEl.innerHTML = '';
-
-    item.opcoes.forEach((opcao, i) => {
-      const div = document.createElement('div');
-      div.textContent = opcao;
-      div.className = 'quiz-opcao';
-      div.tabIndex = 0;
-      div.onclick = () => selecionarOpcao(i, div);
-      div.onkeypress = (e) => { if(e.key === 'Enter' || e.key === ' ') selecionarOpcao(i, div); };
-      opcoesEl.appendChild(div);
-    });
-  }
-
-  function selecionarOpcao(indice, elemento) {
-    if(quizRespondido) return;
-    quizRespondido = true;
-    const item = quizData[quizIndex];
-    const correto = item.correta;
-
-    if(indice === correto) {
-      elemento.classList.add('correta');
-      feedbackEl.textContent = 'Resposta correta! 🎉';
-      feedbackEl.style.color = '#4caf50';
-    } else {
-      elemento.classList.add('errada');
-      feedbackEl.textContent = `Errado! A resposta certa é "${item.opcoes[correto]}".`;
-      feedbackEl.style.color = '#f44336';
-      // Marcar a resposta correta também
-      [...opcoesEl.children].forEach((child, i) => {
-        if(i === correto) child.classList.add('correta');
-      });
-    }
-    btnProxima.style.display = 'inline-block';
-  }
-
-  btnProxima.onclick = () => {
-    quizIndex++;
-    if(quizIndex >= quizData.length) {
-      perguntaEl.textContent = "Quiz finalizado! Parabéns pelo esforço! 🎵";
-      opcoesEl.innerHTML = '';
-      feedbackEl.textContent = '';
-      btnProxima.style.display = 'none';
-      return;
-    }
-    carregarPergunta();
-  };
-
-  // Inicialização
-  montarBotoesTons();
-  atualizarAcordes();
-  metaDiv.textContent = `Tom inicial: ${tomAtual} (${modoAtual})`;
-  carregarPergunta();
+/* --- 11. Inicialização --- */
+criarBotoesTons(); atualizarAcordes(); mostrarPergunta();
 </script>
 </body>
 </html>
